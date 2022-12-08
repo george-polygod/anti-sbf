@@ -103,7 +103,7 @@ contract AntiSBFToken is IERC20Upgradeable, OwnableUpgradeable {
 
         _name = name_;
         _symbol = symbol_;
-        _decimals = 18;
+        _decimals = 9;
 
         _tTotal = totalSupply_;
         _rTotal = (MAX - (MAX % _tTotal));
@@ -120,7 +120,7 @@ contract AntiSBFToken is IERC20Upgradeable, OwnableUpgradeable {
 
         swapAndLiquifyEnabled = true;
 
-        _rOwned[owner()] = _rTotal;
+        _rOwned[_msgSender()] = _rTotal;
 
         IUniswapV2Router02 _uniswapV2Router = IUniswapV2Router02(router_);
         // Create a uniswap pair for this new token
@@ -131,7 +131,7 @@ contract AntiSBFToken is IERC20Upgradeable, OwnableUpgradeable {
         uniswapV2Router = _uniswapV2Router;
 
         // exclude owner and this contract from fee
-        _isExcludedFromFee[owner()] = true;
+        _isExcludedFromFee[_msgSender()] = true;
         _isExcludedFromFee[address(this)] = true;
 
         LGEWhitelisted antiBot_ = new LGEWhitelisted(msg.sender);
@@ -141,7 +141,7 @@ contract AntiSBFToken is IERC20Upgradeable, OwnableUpgradeable {
 
         __Ownable_init();
 
-        emit Transfer(address(0), owner(), _tTotal);
+        emit Transfer(address(0), _msgSender(), _tTotal);
         
 
     }
